@@ -6,22 +6,31 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+<<<<<<< HEAD
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+=======
+>>>>>>> dec714f06e996c9fa1732203cfb5bc59787a8f26
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+<<<<<<< HEAD
 import java.net.URL;
 
+=======
+>>>>>>> dec714f06e996c9fa1732203cfb5bc59787a8f26
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG="Main";
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private Menu menu;
+<<<<<<< HEAD
     TextView textView;
+=======
+>>>>>>> dec714f06e996c9fa1732203cfb5bc59787a8f26
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
         Log.d("Main","On Create");
 
+<<<<<<< HEAD
         final TextView tv = (TextView) findViewById(R.id.tv);
         Button btn = (Button) findViewById(R.id.btn);
 
@@ -62,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+=======
+>>>>>>> dec714f06e996c9fa1732203cfb5bc59787a8f26
     }
     @Override
     public void onStart() {
