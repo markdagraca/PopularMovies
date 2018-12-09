@@ -1,31 +1,20 @@
 package com.example.markd.popularmovies;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
+
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,10 +35,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -69,6 +54,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private TextView mUsernameView;
+
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private static final String TAG = "Login";
@@ -88,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        mUsernameView=findViewById(R.id.username);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -122,35 +110,54 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG,"attempt Login");
         final AutoCompleteTextView email=findViewById(R.id.email);
         EditText password=findViewById(R.id.password);
-
-        Log.d(TAG,email.getText().toString());
-        mAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-
-                    }
-                });
-        mAuth.signInWithEmailAndPassword(email.getText().toString(),password.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                    }
-                });
-
-        if(mAuth.getCurrentUser()==null)
+        if(password.getText().toString().isEmpty()||
+                email.getText().toString().isEmpty())
         {
-            Toast.makeText(LoginActivity.this,"You have entered the wrong email or password",Toast.LENGTH_LONG).show();
-
-        }
-        else
-        {
-            User.setUsername(email.getText().toString());
-            redirecttoMain();
+            Toast.makeText(getApplicationContext(),"Please Enter a username and password", Toast.LENGTH_LONG).show();
             return;
         }
+        if(!mUsernameView.getText().toString().isEmpty()) {
+            mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                User.setUsername(email.getText().toString(), mUsernameView.getText().toString());
+                                redirecttoMain();
+
+                            }
+                        }
+                    });
+        }
+
+
+            mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "attemptLogin: 126");
+
+                                User.getUsername(email.getText().toString());
+
+
+                                Log.d(TAG, "attemptLogin: " + mAuth.getCurrentUser().getEmail());
+                                redirecttoMain();
+                            }
+                            else
+                            {
+                                Log.d(TAG, "onComplete: Password Incorrect");
+                                Toast.makeText(getApplicationContext(),"Email or password you entered is incorrect", Toast.LENGTH_LONG).show();
+                            }
+
+
+                        }
+                    });
+
+
+
+
+
 
 
 
@@ -185,6 +192,10 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
+
+
+
+
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
@@ -197,7 +208,7 @@ public class LoginActivity extends AppCompatActivity {
     // [END onactivityresult]
 
     // [START auth_with_google]
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         // [START_EXCLUDE silent]
 
@@ -212,6 +223,11 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            if(User.getUsername(acct.getEmail())==null)
+                            {
+                                User.setUsername(acct.getEmail(),acct.getDisplayName());
+                            }
                            redirecttoMain();
 
                         } else {

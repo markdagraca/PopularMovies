@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 import java.net.URL;
 
 
@@ -67,8 +69,24 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-         currentUser = mAuth.getCurrentUser();
 
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        currentUser = mAuth.getCurrentUser();
+        TextView name=findViewById(R.id.nameshow);
+        if(User.username==null)
+        {
+            name.setText("No user logged in");
+        }
+        else
+        {
+            name.setText(User.username);
+        }
 
     }
 
@@ -110,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         {
 
             FirebaseAuth.getInstance().signOut();
+            User.logOut();;
             Intent mainActivity=new Intent(getApplicationContext(),MainActivity.class);
             startActivity(mainActivity);
 
