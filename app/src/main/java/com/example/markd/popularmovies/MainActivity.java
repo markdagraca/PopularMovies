@@ -19,7 +19,7 @@ import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG="Main";
+    public static final String TAG="MainActivity";
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private Menu menu;
@@ -79,31 +79,32 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         currentUser = mAuth.getCurrentUser();
         TextView name=findViewById(R.id.nameshow);
-        if(User.username==null)
-        {
-            name.setText("No user logged in");
-        }
-        else
-        {
-            name.setText(User.username);
-        }
+        Log.d(TAG, "onResume:"+currentUser);
+        Log.d(TAG, "onResume:"+User.username);
+
+
+        User.getUsername(name);
+
 
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
         this.menu=menu;
+        MenuItem profile=menu.findItem(R.id.menu_profile);
         if(mAuth.getCurrentUser()==null)
         {
 
             MenuItem login=menu.findItem(R.id.log_out);
             login.setVisible(false);
+            profile.setVisible(false);
+
         }
         else
         {
             MenuItem login=menu.findItem(R.id.sign_in);
             login.setVisible(false);
+            profile.setVisible(true);
 
         }
 
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         if(item.getTitle().equals("Sign In"))
         {
             Log.d(TAG,"Activity switch to signin");
+
             Intent signin=new Intent(getApplicationContext(),LoginActivity.class);
             startActivity(signin);
 
@@ -128,11 +130,18 @@ public class MainActivity extends AppCompatActivity {
         {
 
             FirebaseAuth.getInstance().signOut();
-            User.logOut();;
+            User.logOut();
+
             Intent mainActivity=new Intent(getApplicationContext(),MainActivity.class);
             startActivity(mainActivity);
 
 
+
+        }
+        else if(item.getTitle().equals("Profile"))
+        {
+            Intent profileactivity=new Intent(getApplicationContext(),ProfileActivity.class);
+            startActivity(profileactivity);
 
         }
 

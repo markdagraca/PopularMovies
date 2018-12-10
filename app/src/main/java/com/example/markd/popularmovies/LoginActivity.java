@@ -62,7 +62,11 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //Call Super
         super.onCreate(savedInstanceState);
+
+        //Calling Google auth
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -73,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-
         mPasswordView = (EditText) findViewById(R.id.password);
         mUsernameView=findViewById(R.id.username);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -110,10 +113,9 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG,"attempt Login");
         final AutoCompleteTextView email=findViewById(R.id.email);
         EditText password=findViewById(R.id.password);
-        if(password.getText().toString().isEmpty()||
-                email.getText().toString().isEmpty())
+        if(!isPasswordValid(password.getText().toString()) || !isEmailValid(email.getText().toString()))
         {
-            Toast.makeText(getApplicationContext(),"Please Enter a username and password", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Please Enter a valid username and password", Toast.LENGTH_LONG).show();
             return;
         }
         if(!mUsernameView.getText().toString().isEmpty()) {
@@ -124,6 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 User.setUsername(email.getText().toString(), mUsernameView.getText().toString());
                                 redirecttoMain();
+                                finish();
 
                             }
                         }
@@ -143,6 +146,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 Log.d(TAG, "attemptLogin: " + mAuth.getCurrentUser().getEmail());
                                 redirecttoMain();
+                                finish();
                             }
                             else
                             {
@@ -185,7 +189,6 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == 99) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -199,9 +202,7 @@ public class LoginActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                // [START_EXCLUDE]
 
-                // [END_EXCLUDE]
             }
         }
     }
@@ -210,11 +211,10 @@ public class LoginActivity extends AppCompatActivity {
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        // [START_EXCLUDE silent]
 
-        // [END_EXCLUDE]
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -226,9 +226,11 @@ public class LoginActivity extends AppCompatActivity {
 
                             if(User.getUsername(acct.getEmail())==null)
                             {
-                                User.setUsername(acct.getEmail(),acct.getDisplayName());
+                                User.setUsername(acct);
                             }
+
                            redirecttoMain();
+                            finish();
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -238,6 +240,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
+
 
     }
     private void redirecttoMain()
