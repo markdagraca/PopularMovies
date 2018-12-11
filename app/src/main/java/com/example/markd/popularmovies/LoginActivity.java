@@ -245,8 +245,8 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void redirecttoMain()
     {
-        Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(mainActivity);
+//        Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+//        startActivity(mainActivity);
     }
     // [END auth_with_google]
 

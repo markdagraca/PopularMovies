@@ -25,10 +25,13 @@ public class ProfileActivity extends AppCompatActivity {
         FirebaseAuth auth=FirebaseAuth.getInstance();
         if(auth.getCurrentUser()!=null)
         {
+            TextView username=(TextView) findViewById(R.id.profile_username);
             User.setProfileImage((ImageView) findViewById(R.id.profile_image));
-            User.getUsername((TextView) findViewById(R.id.profile_username));
+            User.getUsername(username);
             TextView email=(TextView)findViewById(R.id.profile_email);
-            email.setText(auth.getCurrentUser().getEmail().toString());
+            email.setText("Email: "+auth.getCurrentUser().getEmail().toString());
+            if(username.getText().length()>0)
+            username.setText("Username: "+username.getText());
         }
 
 
@@ -42,9 +45,6 @@ public class ProfileActivity extends AppCompatActivity {
     {
         FirebaseAuth.getInstance().signOut();
         User.logOut();
-
-        Intent mainActivity=new Intent(getApplicationContext(),MainActivity.class);
-        startActivity(mainActivity);
         finish();
     }
 }

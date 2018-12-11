@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         TextView name=findViewById(R.id.nameshow);
         Log.d(TAG, "onResume:"+currentUser);
         Log.d(TAG, "onResume:"+User.username);
+        invalidateOptionsMenu();
 
 
         User.getUsername(name);
