@@ -155,19 +155,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(profileactivity);
 
         }
-        else if (item.getItemId()==R.id.get_movies) {
 
-
-            NetworkParsing parsing=new NetworkParsing();
-            parsing.setAdapter(mAdapter);
-
-
-           parsing.execute(0);
-
-
-
-
-        }
 
 
 

@@ -48,8 +48,13 @@ public class MovieRecyclerView extends RecyclerView.Adapter<MovieRecyclerView.Mo
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             Intent intent=new Intent(mContext,MoviePage.class);
-             intent.putExtra("index",position);
+             Intent intent=new Intent(mContext,MoviePage.class);;
+             intent.putExtra("movie",mMovie.get(position).getId());
+             intent.putExtra("title",mMovie.get(position).getTitle());
+             intent.putExtra("poster",mMovie.get(position).getPosterUrl());
+             intent.putExtra("backdrop",mMovie.get(position).getBackdropPath());
+             intent.putExtra("description",mMovie.get(position).getDescription());
+
              Intent[] i={intent};
              mContext.startActivities(i);
 
