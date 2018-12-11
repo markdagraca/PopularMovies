@@ -3,6 +3,9 @@ package com.example.markd.popularmovies;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +19,12 @@ import com.google.firebase.auth.FirebaseUser;
 import org.w3c.dom.Text;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import info.movito.themoviedbapi.TmdbApi;
+import info.movito.themoviedbapi.TmdbMovies;
+import info.movito.themoviedbapi.model.core.MovieResultsPage;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -25,40 +34,35 @@ public class MainActivity extends AppCompatActivity {
     private Menu menu;
     TextView textView;
 
+    private RecyclerView mRecyclerView;
+    private MovieRecyclerView mAdapter;
+    private ArrayList<Movie> movies = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //ADDED FOR RECYCLER VIEW
+        mRecyclerView = findViewById(R.id.my_recycler_view);
+
+        mAdapter = new MovieRecyclerView(this, movies);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this,3));
+
+        NetworkParsing parsing=new NetworkParsing();
+        parsing.setAdapter(mAdapter);
+        parsing.execute(0);
+
+
+
+
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         Log.d("Main","On Create");
 
-        final TextView tv = (TextView) findViewById(R.id.tv);
-        Button btn = (Button) findViewById(R.id.btn);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String[] data;
-
-                URL url;
-                url = NetworkUtils.buildURL();
-                String response;
-
-
-
-
-                Log.d("getting JSON  ? : ","URL HERE , (need to turn into JSON  parsed)" + url);
-
-
-                tv.setText(" need to chang this to parsedJSON/into recybler view " + url);
-
-
-//                urlString = "http://api.openweathermap.org/data/2.5/weather?q=khulna,bd";
-//                new ProcessJSON().execute(urlString);
-            }
-        });
 
 
 
@@ -78,13 +82,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         currentUser = mAuth.getCurrentUser();
-        TextView name=findViewById(R.id.nameshow);
+
         Log.d(TAG, "onResume:"+currentUser);
         Log.d(TAG, "onResume:"+User.username);
         invalidateOptionsMenu();
 
 
-        User.getUsername(name);
+
+
 
 
     }
@@ -114,10 +119,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         Log.d("Main Activty", (String) item.getTitle());
+
+
+
         if(item.getTitle().equals("Sign In"))
         {
             Log.d(TAG,"Activity switch to signin");
@@ -143,6 +153,19 @@ public class MainActivity extends AppCompatActivity {
         {
             Intent profileactivity=new Intent(getApplicationContext(),ProfileActivity.class);
             startActivity(profileactivity);
+
+        }
+        else if (item.getItemId()==R.id.get_movies) {
+
+
+            NetworkParsing parsing=new NetworkParsing();
+            parsing.setAdapter(mAdapter);
+
+
+           parsing.execute(0);
+
+
+
 
         }
 
