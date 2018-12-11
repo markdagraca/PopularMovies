@@ -3,7 +3,7 @@ package com.example.markd.popularmovies;
 import java.util.Date;
 
 public class Movie {
-    public Movie(String id, String posterUrl, String title, String description, double popularity, String releaseDate) {
+    public Movie(String id, String posterUrl, String title, String description, float popularity, String releaseDate) {
         this.id = id;
         this.posterUrl = posterUrl;
         this.title = title;
@@ -28,7 +28,7 @@ public class Movie {
         return description;
     }
 
-    public double getPopularity() {
+    public float getPopularity() {
         return popularity;
     }
 
@@ -40,7 +40,7 @@ public class Movie {
     private String posterUrl;
     private String title;
     private String description;
-    private double popularity;
+    private float popularity;
     private String releaseDate;
 
 

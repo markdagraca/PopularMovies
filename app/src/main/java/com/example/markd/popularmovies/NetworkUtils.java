@@ -18,7 +18,7 @@ public class NetworkUtils {
      */
 
     final static String MOVIEDB_API_URL =
-           " https://api.themoviedb.org/3/movie/popular?api_key=6b4dcbc10b352b07959f8f3a9799126e&language=en-US&page=1";
+            " https://api.themoviedb.org/3/movie/popular?api_key=6b4dcbc10b352b07959f8f3a9799126e&language=en-US&page=1";
 
     public static URL buildURL (){
         Uri builtUri = Uri.parse(MOVIEDB_API_URL).buildUpon(). build();

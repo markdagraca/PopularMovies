@@ -3,6 +3,8 @@ package com.example.markd.popularmovies;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +18,8 @@ import com.google.firebase.auth.FirebaseUser;
 import org.w3c.dom.Text;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -25,10 +29,24 @@ public class MainActivity extends AppCompatActivity {
     private Menu menu;
     TextView textView;
 
+    private RecyclerView mRecyclerView;
+    private MovieRecyclerView mAdapter;
+    private ArrayList<Movie> movies = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //ADDED FOR RECYCLER VIEW
+        mRecyclerView = findViewById(R.id.my_recycler_view);
+
+        mAdapter = new MovieRecyclerView(this, movies);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -113,10 +131,39 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int itemThatWasClickedId = item.getItemId();
+//        if (itemThatWasClickedId == R.id.get_movies) {
+//            MovieQueryTask task = new MovieQueryTask();
+//            Log.d("here ","test" + movies);
+//
+//            task.execute();
+//            try {
+//                String str = task.get();
+//                movies  = JsonUtils.parseNews(str);
+//                Log.d("here ","test" + movies);
+//                mAdapter.mMovie = movies;
+//                mAdapter.notifyDataSetChanged();
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         Log.d("Main Activty", (String) item.getTitle());
+
+
+
         if(item.getTitle().equals("Sign In"))
         {
             Log.d(TAG,"Activity switch to signin");
