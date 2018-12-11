@@ -4,10 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -40,14 +44,20 @@ public class MovieRecyclerView extends RecyclerView.Adapter<MovieRecyclerView.Mo
     public void onBindViewHolder(MovieRecyclerView.MovieHolder holder , final int position)
     {
         holder.title.setText(mMovie.get(position).getTitle());
-        holder.id.setText(mMovie.get(position).getDescription());
-        holder.overview.setOnClickListener(new View.OnClickListener() {
+//        holder.id.setText(mMovie.get(position).getDescription());
+        holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String m = mMovie.get(position).getDescription();
-                openWebPage(m);
+             Intent intent=new Intent(mContext,MoviePage.class);
+             intent.putExtra("index",position);
+             Intent[] i={intent};
+             mContext.startActivities(i);
+
             }
         });
+        holder.setIndex(position);
+        holder.loadimage(mMovie.get(position).getPosterUrl());
+
     }
     @Override
     public int getItemCount() {
@@ -68,24 +78,47 @@ public class MovieRecyclerView extends RecyclerView.Adapter<MovieRecyclerView.Mo
     public class MovieHolder extends RecyclerView.ViewHolder {
 
         private TextView id,title,popularity,poster,language,overview;
+        private ImageView image;
+        int index;
+        String posterUrl="";
+
 
         public MovieHolder(View itemView){
             super(itemView);
+            posterUrl=mMovie.get(index).getPosterUrl();
 
-            id = (TextView)itemView.findViewById(R.id.id);
-            title = (TextView)itemView.findViewById(R.id.title);
-            popularity = (TextView)itemView.findViewById(R.id.popularity);
-            poster =(TextView)itemView.findViewById(R.id.poster_path);
-            language =(TextView)itemView.findViewById(R.id.orginal_language);
-            overview =(TextView)itemView.findViewById(R.id.overview);
+//
+//            title = (TextView)itemView.findViewById(R.id.title);
+//
+//
+//
+//            title.setVisibility(View.INVISIBLE);
+            title=itemView.findViewById(R.id.movie_title);
+            image=itemView.findViewById(R.id.poster);
+            Log.d("MovieViewHolder", "MovieHolder: "+posterUrl);
+
+
 
         }
 
         void bind(final int listIndex) {
             id.setText(mMovie.get(listIndex).getId());
             title.setText(mMovie.get(listIndex).getTitle());
+            index=listIndex;
+            posterUrl=mMovie.get(listIndex).getPosterUrl();
+            Log.d("MovieViewHolder", "bind: "+mMovie.get(listIndex).getTitle());
+
             // itemView.setOnClickListener(this);
         }
+        void setIndex(int index)
+        {
+            this.index=index;
+        }
+        void loadimage(String Url)
+        {
+            Picasso.get().load("https://image.tmdb.org/t/p/w400"+Url).into(image);
+        }
+
 
     }
 }
