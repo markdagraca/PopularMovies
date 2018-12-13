@@ -54,6 +54,7 @@ public class MovieRecyclerView extends RecyclerView.Adapter<MovieRecyclerView.Mo
              intent.putExtra("poster",mMovie.get(position).getPosterUrl());
              intent.putExtra("backdrop",mMovie.get(position).getBackdropPath());
              intent.putExtra("description",mMovie.get(position).getDescription());
+             intent.putExtra("video",mMovie.get(position).getVideo());
 
              Intent[] i={intent};
              mContext.startActivities(i);

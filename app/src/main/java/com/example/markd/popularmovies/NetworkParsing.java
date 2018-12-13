@@ -57,16 +57,22 @@ public class NetworkParsing extends AsyncTask<Integer,Void,ArrayList<Movie>>  {
         Movie movie=null;
         MovieDb movieDb=tmdb.getMovie(id,"en",TmdbMovies.MovieMethod.popular,TmdbMovies.MovieMethod.videos,
                 TmdbMovies.MovieMethod.similar);
+
         String videolink="";
-        if(movieDb.getVideos().size()>0)
+        List<Video> videos = movieDb.getVideos();
+
+        if(videos.size()>0)
         {
-            for(int i=0;i<movieDb.getVideos().size();i++)
+            for(int i=0;i< videos.size();i++)
             {
-                if(movieDb.getVideos().get(i).getSite()=="YouTube")
+                if(videos.get(i).getSite()=="YouTube")
                 {
-                    videolink=movieDb.getVideos().get(i).getKey();
+                    videolink=videos.get(i).getKey();
+                    Log.i("MOVIEIEIEIEIEIEIEIEEIEI", videolink);
                 }
             }
+        }else{
+            Log.i("MOVIEIEIEIEIEIEIEIEEIEI", "not longer than 0");
         }
         ArrayList<Integer> similarMovies=new ArrayList<Integer>();
         for (int i = 0; i < movieDb.getSimilarMovies().size(); i++) {
