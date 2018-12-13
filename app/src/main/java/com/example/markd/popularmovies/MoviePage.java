@@ -20,7 +20,7 @@ public class MoviePage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_page);
-
+        prevIntent = getIntent();
         YouTubePlayerView youTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_player_view);
         youTubePlayerView.initialize(YOUTUBE_API_KEY, this);
     }
@@ -31,11 +31,7 @@ public class MoviePage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
 
         TextView title=findViewById(R.id.moviepage_title);
         TextView description=findViewById(R.id.moviepage_description);
-
-//        Intent previnent=getIntent();
-        prevIntent = getIntent();
-
-        title.setText(prevIntent.getStringExtra("video"));
+        title.setText(prevIntent.getStringExtra("title"));
         description.setText(prevIntent.getStringExtra("description"));
     }
 
@@ -47,7 +43,7 @@ public class MoviePage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
         if (!b) {
             String video = prevIntent.getStringExtra("video");
             Log.i("MoviePage", video);
-            youTubePlayer.cueVideo("u9Mv98Gr5pY"); // venom trailer id u9Mv98Gr5pY
+            youTubePlayer.cueVideo(video); // venom trailer id u9Mv98Gr5pY
         }
     }
 
