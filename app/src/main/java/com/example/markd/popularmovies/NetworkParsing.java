@@ -62,9 +62,10 @@ public class NetworkParsing extends AsyncTask<Integer,Void,ArrayList<Movie>>  {
         {
             for(int i=0;i<movieDb.getVideos().size();i++)
             {
-                if(movieDb.getVideos().get(i).getSite()=="YouTube")
+                if(movieDb.getVideos().get(i).getSite().equals("YouTube"))
                 {
                     videolink=movieDb.getVideos().get(i).getKey();
+                    break;
                 }
             }
         }

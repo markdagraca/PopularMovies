@@ -21,6 +21,7 @@ public class MoviePage extends AppCompatActivity {
         TextView description=findViewById(R.id.moviepage_description);
 
         Intent previnent=getIntent();
+        getIntent().getStringExtra("video");
 
         title.setText(previnent.getStringExtra("title"));
         description.setText(previnent.getStringExtra("description"));
